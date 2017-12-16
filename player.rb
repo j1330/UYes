@@ -50,6 +50,12 @@ class Player
       end
     end
   end
+
+  def to_s
+    @cards.inject("") do | str, card |
+      str + card.to_s + " "
+    end
+  end
 end
 # require "pp"
 # field = Field.new
@@ -62,6 +68,6 @@ end
 #   #NumberCard.new("a",:green,7)
 # ]
 # #p player.choose_card
-# pp player.out_card
-# pp player.cards
+# puts player.out_card
+# puts player
 

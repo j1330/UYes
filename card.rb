@@ -5,4 +5,7 @@ class Card
   def initialize(costume, color)
     @costume = costume; @color = color
   end
+  def to_s
+    @color.to_s
+  end
 end

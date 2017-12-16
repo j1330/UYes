@@ -6,4 +6,7 @@ class NumberCard < Card
     super(costume, color)
     @number = number
   end
+  def to_s
+    @color.to_s + @number.to_s
+  end
 end
