@@ -12,26 +12,21 @@ class Field
   def initialize
     # 色の定義
     colors = [:red,:blue,:green,:yellow]
-  　# 数の定義
-    # 各色0が1枚,１～９が2枚ずつ
+    # 各色0が1枚,1~9が2枚ずつ
+    # 数の定義
     numbers = [*0..9] + [*1..9]
     # 色と数字の組み合わせ
-    @deck = colors.product(numbers).map do |color, num|
+    @deck = colors.product(numbers).shuffle.map do |color, num|
               costume = "a"#Image.load(color+num.to_s+".png")
               NumberCard.new(costume, color, num)
             end
     @tableau = []
-    @deck.shuffle!
-  end
-
-  # 捨て札をシャッフル
-  def shuffle!
-    @tableau.shuffle!
   end
 
   # 捨て札を山札に戻す
   def refresh
-    self.shuffle!
+    # 捨て札をシャッフル
+    @tableau.shuffle!
     @deck = @tableau + @deck
     @tableau = []
   end
