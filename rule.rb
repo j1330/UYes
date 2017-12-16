@@ -1,5 +1,5 @@
 require_relative "number_card.rb"
-require_relative "draw2_card.rb"
+require_relative "wild_card.rb"
 module Rule
   # 色の定義
   COLORS = [:red,:blue,:green,:yellow]
@@ -7,7 +7,8 @@ module Rule
     red: "赤",
     blue: "青",
     green: "緑",
-    yellow: "黄"
+    yellow: "黄",
+    wild: "無"
   }
   # 各色0が1枚,1~9が2枚ずつ
   # 数の定義
@@ -15,7 +16,9 @@ module Rule
   module_function
   def judge_playable_cards(open_card, cards)
     cards.map do | card |
-      if open_card.instance_of?(NumberCard) && card.instance_of?(NumberCard)
+      if card.instance_of?(WildCard)
+        true
+      elsif open_card.instance_of?(NumberCard) && card.instance_of?(NumberCard)
         card.number == open_card.number || card.color == open_card.color
       elsif open_card.class != card.class
         card.color == open_card.color

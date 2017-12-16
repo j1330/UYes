@@ -14,4 +14,8 @@ class AutoPlayer < Player
       playable_card ? i : nil
     }.compact.sample
   end
+
+  def choose_color
+    Rule::COLORS.sample
+  end
 end

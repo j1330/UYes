@@ -41,11 +41,19 @@ class Player
   def out_card
     card_id = choose_card
     if card_id
-      @cards.delete_at(card_id)
+      card = @cards.delete_at(card_id)
+      if card.instance_of?(WildCard)
+        card.color = self.choose_color
+      end
+      return card
     else
       self.draw(1)
       if Rule.judge_playable_cards(@field.open_card, [@cards[-1]])[0]
-        @cards.delete_at(-1)
+        card =  @cards.delete_at(-1)
+        if card.instance_of?(WildCard)
+          card.color = self.choose_color
+        end
+        return card
       else
         puts "パス(泣)"
         nil
@@ -64,6 +72,17 @@ class Player
       str + " #{i+1}  "
     end
     row3 + "\n" + row2 + "\n" + row1
+  end
+
+  def choose_color
+    loop do
+      puts "1:赤 2:青 3:緑 4:黄"
+      n = gets.chomp.to_i - 1
+      if n >= 0 && n < 4
+        break Rule::COLORS[n]
+      end
+      puts "もう一度入力してください"
+    end
   end
 end
 # require "pp"
