@@ -4,14 +4,38 @@ require_relative "field"
 class Uyes
 
   # players:プレイヤー
-　# turn_player_id:手番のプレイヤーのインデックス
-　# field:場
+  # turn_player_id:手番のプレイヤーのインデックス
+  # field:場
   attr_accessor :players, :turn_player_id, :field
 
   # ゲームの生成
   def initialize
-    @players = Array.new(4) {Player.new}
     @field = Field.new
+    @players = Array.new(4) {Player.new(@field)}
     @turn_player_id = 0
+    @players.each do | player |
+      player.draw(7)
+    end
+  end
+  def start
+    loop do
+      puts "#{@turn_player_id+1}番目"
+      if @field.deck.length < 5
+        @field.refresh
+      end
+      puts @field.open_card
+      puts @players[@turn_player_id]
+      card = @players[@turn_player_id].out_card
+      if @players[@turn_player_id].cards.length == 0
+        puts "#{@turn_player_id+1}番目のプレイヤー:勝ち"
+        break
+      end
+      if card
+        @field.set_open_card(card)
+      end
+      @turn_player_id = (@turn_player_id + 1) % 4
+    end
   end
 end
+game = Uyes.new
+game.start
