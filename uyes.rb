@@ -32,10 +32,13 @@ class Uyes
         puts "#{@turn_player_id+1}番目のプレイヤー:勝ち"
         break
       end
+      @turn_player_id = (@turn_player_id + 1) % 4
       if card
+        if card.instance_of?(Draw2Card)
+          @players[@turn_player_id].draw(2)
+        end
         @field.set_open_card(card)
       end
-      @turn_player_id = (@turn_player_id + 1) % 4
     end
   end
 end

@@ -79,4 +79,3 @@ end
 # #p player.choose_card
 # puts player.out_card
 # puts player
-

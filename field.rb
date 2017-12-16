@@ -1,6 +1,7 @@
 #field.rb
 require "pp"
 require_relative "number_card"
+require_relative "draw2_card"
 class Field
 
   # open_card:捨て札の一番上
@@ -11,10 +12,14 @@ class Field
   # 場の生成
   def initialize
     # 色と数字の組み合わせ
-    @deck = Rule::COLORS.product(Rule::NUMBERS).shuffle.map do |color, num|
+    @deck = Rule::COLORS.product(Rule::NUMBERS).map do | color, num |
               costume = "a"#Image.load(color+num.to_s+".png")
               NumberCard.new(costume, color, num)
             end
+    @deck +=  Rule::COLORS.map do | color |
+                Array.new(2){Draw2Card.new("a",color)}
+              end.flatten
+    @deck.shuffle!
     @tableau = []
   end
 
