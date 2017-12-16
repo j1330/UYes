@@ -8,10 +8,10 @@ class Player
   end
 
   # 山札からn枚カードを引く　
-  # deck:山札
+  # field:場
 　# n:山札から引いてくるカードの数
-  def draw(deck, n)
-    @cards += deck.pop(n)
+  def draw(field, n)
+    @cards += field.pop_cards(n)
   end
 　
   # カードを選ぶ

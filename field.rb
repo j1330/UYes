@@ -37,7 +37,7 @@ class Field
   end 
 
   # 捨て札の一番上のカードを更新
-  def set_card(card)
+  def set_open_card(card)
     if @open_card
       @tableau.push(@open_card)
     end
