@@ -3,6 +3,7 @@ require "pp"
 require_relative "number_card"
 require_relative "draw2_card"
 require_relative "skip_card"
+require_relative "reverse_card"
 class Field
 
   # open_card:捨て札の一番上
@@ -20,7 +21,8 @@ class Field
     @deck +=  Rule::COLORS.map do | color |
                 [
                   Array.new(2){Draw2Card.new("a",color)},
-                  Array.new(2){SkipCard.new("a",color)}
+                  Array.new(2){SkipCard.new("a",color)},
+                  Array.new(2){ReverseCard.new("a",color)}
                 ]
               end.flatten         
     @deck.shuffle!
