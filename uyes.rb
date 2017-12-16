@@ -1,5 +1,6 @@
 #uyes.rb
 require_relative "player"
+require_relative "auto_player"
 require_relative "field"
 class Uyes
 
@@ -11,7 +12,8 @@ class Uyes
   # ゲームの生成
   def initialize
     @field = Field.new
-    @players = Array.new(4) {Player.new(@field)}
+    @players = [Player.new(@field)]
+    @players += Array.new(3){AutoPlayer.new(@field)}
     @turn_player_id = 0
     @players.each do | player |
       player.draw(7)
