@@ -10,13 +10,8 @@ class Field
 
   # 場の生成
   def initialize
-    # 色の定義
-    colors = [:red,:blue,:green,:yellow]
-    # 各色0が1枚,1~9が2枚ずつ
-    # 数の定義
-    numbers = [*0..9] + [*1..9]
     # 色と数字の組み合わせ
-    @deck = colors.product(numbers).shuffle.map do |color, num|
+    @deck = Rule::COLORS.product(Rule::NUMBERS).shuffle.map do |color, num|
               costume = "a"#Image.load(color+num.to_s+".png")
               NumberCard.new(costume, color, num)
             end

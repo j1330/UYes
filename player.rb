@@ -30,6 +30,7 @@ class Player
         if n >= 0 && n < playable_cards.length && playable_cards[n]
           break n
         end
+        puts "選べない手です"
       end
     else
       nil
@@ -46,15 +47,23 @@ class Player
       if Rule.judge_playable_cards(@field.open_card, [@cards[-1]])[0]
         @cards.delete_at(-1)
       else
+        puts "パス(泣)"
         nil
       end
     end
   end
 
   def to_s
-    @cards.inject("") do | str, card |
+    row1 = @cards.inject("") do | str, card |
       str + card.to_s + " "
     end
+    row2 = @cards.each_with_index.inject("") do | str, (card, i) |
+      str + "----"
+    end
+    row3 = @cards.each_with_index.inject("") do | str, (card, i) |
+      str + " #{i+1}  "
+    end
+    row3 + "\n" + row2 + "\n" + row1
   end
 end
 # require "pp"
