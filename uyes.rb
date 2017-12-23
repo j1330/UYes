@@ -12,17 +12,27 @@ class Uyes
   # ゲームの生成
   def initialize
     @field = Field.new
-    @players = [ Player.new(@field,"あなた") ]
-    @players += Array.new(3) do |index|
-      AutoPlayer.new(@field, "CPU #{index}")
-    end
   end
 
   # 全体ゲームの開始
   # (n回ゲームを行い総得点を競う)
   def start
-    puts "[ゲームの回数を入力してください] :"
+    puts "[あなたの名前を教えてください] :"
+    player_name = loop do
+      str = gets.chomp
+      if str.length > 0
+        break str
+      end
+      puts "1文字以上入力してください"
+    end
 
+    # プレイヤーの生成
+    @players = [ Player.new(@field,player_name) ]
+    @players += Array.new(3) do |index|
+      AutoPlayer.new(@field, "CPU #{index+1}")
+    end
+
+    puts "[ゲームの回数を入力してください] :"
     @game_max = loop do
       n = gets.chomp.to_i
       if n > 0
@@ -32,8 +42,9 @@ class Uyes
       puts "1以上の数字を入力してください"
     end
 
+    # @game_max 回ゲームを行う
     @game_max.times do |game_count|
-      puts "\n[第#{game_count+1}ゲームを開始します...]"
+      puts "\n#{'='*10} 第#{game_count+1}ゲームを開始します #{'='*10}"
 
       do_game
 
@@ -47,8 +58,10 @@ class Uyes
 
     # 最終的な勝利者
     winner = @players.min {|p1,p2| p1.total_score <=> p2.total_score }
-    puts "\n#{winner.name} の総合優勝です!\n"
+    puts "\n#{winner.name} の総合優勝です!\n\n"
   end
+
+  protected
 
   # 1回ごとのゲームを行う
   def do_game
