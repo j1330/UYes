@@ -35,14 +35,14 @@ class Player
         end
         # 宣言は"UYes"ひとつしかないので最初の要素をインスタンス変数に入れる
         @call = calls.empty? ? '' : calls[0]
-        # 入力のうち，手札の枚数以内の数字を抽出
+        # 入力のうち，場に出せる数字を抽出
         card_ids = input.map { |str|
           str.to_i - 1
         }.select { |i|
-          i >= 0 && i < playable_cards.length
+          i >= 0 && i < playable_cards.length && playable_cards[i]
         }.uniq
-        # 最初の数字を選択された数字として，選べる手か調べる
-        if (not card_ids.empty?) && playable_cards[card_ids[0]]
+        # 選べる手の最初のものを返す．ダメだったらやりなおし
+        unless card_ids.empty?
           break card_ids[0]
         end
         puts "選べない手です"
