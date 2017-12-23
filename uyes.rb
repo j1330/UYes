@@ -36,6 +36,7 @@ class Uyes
       end
       if @players[@turn_player_id].cards.length == 0
         puts "#{@turn_player_id+1}番目のプレイヤー:勝ち"
+        display_players_score
         break
       end
       if card
@@ -66,6 +67,14 @@ class Uyes
       (@turn_player_id + step) % 4
     else
       (@turn_player_id - step + 4) % 4
+    end
+  end
+
+  # 各プレイヤーのスコアを表示する
+  def display_players_score
+    puts "\n#{'='*10} 得点 #{'='*10}"
+    @players.each.with_index do |player, index|
+      puts "#{index+1}番目のプレイヤーの得点: #{player.score}"
     end
   end
 end
