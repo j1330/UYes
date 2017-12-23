@@ -4,10 +4,11 @@ require_relative "field"
 class Player
 
   # cards:手札
-  attr_accessor :cards
+  attr_accessor :cards, :call
   def initialize(field)
     @field = field
     @cards = []
+    @call = nil
   end
 
   # 山札からn枚カードを引く
@@ -27,6 +28,7 @@ class Player
     if playable_cards.any?
       loop do
         n = gets.chomp.to_i - 1
+        @call = gets.chomp
         if n >= 0 && n < playable_cards.length && playable_cards[n]
           break n
         end
@@ -93,8 +95,9 @@ end
 # player.cards = [
 #   NumberCard.new("a",:blue,4),
 #   NumberCard.new("a",:red,5),
-#   #NumberCard.new("a",:green,7)
+#   NumberCard.new("a",:green,7)
 # ]
-# #p player.choose_card
+# p player.choose_card
 # puts player.out_card
+# puts player.call
 # puts player

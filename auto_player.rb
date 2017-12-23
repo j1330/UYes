@@ -10,6 +10,10 @@ class AutoPlayer < Player
     else
       playable_cards = Rule.judge_playable_cards(@field.open_card, cards)
     end
+    if @cards.length == 2
+      @call = (rand(4) == 0) ? "" : Rule::CALLS[:last_one]
+      puts @call
+    end
     playable_cards.map.with_index {| playable_card, i | 
       playable_card ? i : nil
     }.compact.sample

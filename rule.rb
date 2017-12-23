@@ -10,6 +10,9 @@ module Rule
     yellow: "黄",
     wild: "無"
   }
+  CALLS = {
+    last_one: "UYes"
+  }
   # 各色0が1枚,1~9が2枚ずつ
   # 数の定義
   NUMBERS = [*0..9] + [*1..9]
