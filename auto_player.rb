@@ -4,7 +4,7 @@ require_relative "field"
 require_relative "player"
 class AutoPlayer < Player
   # カードを選ぶ
-  def choose_card
+  def choose_cards
     if @field.open_card.nil?
       playable_cards = @cards.map {true}
     else
@@ -14,9 +14,10 @@ class AutoPlayer < Player
       @call = (rand(4) == 0) ? "" : Rule::CALLS[:last_one]
       puts @call
     end
-    playable_cards.map.with_index {| playable_card, i | 
+    card_id = playable_cards.map.with_index { |playable_card, i|
       playable_card ? i : nil
     }.compact.sample
+    return card_id.nil? ? [] : [card_id]
   end
 
   def choose_color

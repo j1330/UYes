@@ -19,7 +19,7 @@ class Player
   end
 
   # カードを選ぶ
-  def choose_card
+  def choose_cards
     if @field.open_card.nil?
       playable_cards = @cards.map {true}
     else
@@ -35,15 +35,17 @@ class Player
         end
         # 宣言は"UYes"ひとつしかないので最初の要素をインスタンス変数に入れる
         @call = calls.empty? ? '' : calls[0]
-        # 入力のうち，場に出せる数字を抽出
+        # 入力のうち，手札の枚数以内の数字を抽出
         card_ids = input.map { |str|
           str.to_i - 1
         }.select { |i|
-          i >= 0 && i < playable_cards.length && playable_cards[i]
+          i >= 0 && i < playable_cards.length
         }.uniq
-        # 選べる手の最初のものを返す．ダメだったらやりなおし
-        unless card_ids.empty?
-          break card_ids[0]
+        # 一番下（最初に選ばれたカード）が出せないカードであるか，同時に出せないカードだったら再入力
+        if  (not card_ids.empty?) &&
+            playable_cards[card_ids[0]] &&
+            Rule.judge_playable_plural_cards_at_one_time(card_ids.map { |i| @cards[i] })
+              break card_ids
         end
         puts "選べない手です"
       end
@@ -53,14 +55,20 @@ class Player
   end
 
   # 手札からカードを捨てる
-  def out_card
-    card_id = choose_card
-    if card_id
-      card = @cards.delete_at(card_id)
-      if card.kind_of?(WildCard)
-        card.color = self.choose_color
+  def out_cards
+    card_ids = choose_cards
+    if (not card_ids.nil?) && (not card_ids.empty?)
+      # 選ばれたカードを抜きだす
+      cards = @cards.values_at *card_ids
+      @cards.reject!.with_index { |card, i| card_ids.include? i }
+      # ワイルドカードがあれば色を選択する
+      cards.map! do |card|
+        if card.kind_of?(WildCard)
+          card.color = self.choose_color
+        end
+        card
       end
-      return card
+      return cards
     else
       self.draw(1)
       if Rule.judge_playable_cards(@field.open_card, [@cards[-1]])[0]
@@ -68,7 +76,7 @@ class Player
         if card.kind_of?(WildCard)
           card.color = self.choose_color
         end
-        return card
+        return [card]
       else
         puts "パス(泣)"
         nil
