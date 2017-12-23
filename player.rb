@@ -4,11 +4,12 @@ require_relative "field"
 class Player
 
   # cards:手札
-  attr_accessor :cards, :call
+  attr_accessor :cards, :call, :total_score
   def initialize(field)
     @field = field
     @cards = []
     @call = nil
+    @total_score = 0
   end
 
   # 山札からn枚カードを引く
