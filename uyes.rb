@@ -29,12 +29,10 @@ class Uyes
       puts "オープンカード:#{@field.open_card}"
       puts @players[@turn_player_id]
       card = @players[@turn_player_id].out_card
-      if @players[@turn_player_id].cards.length ==1
-        if @players[@turn_player_id].call != Rule::CALLS[:last_one]
-           @players[@turn_player_id].draw(2)
-           puts "#{@turn_player_id+1}番プレイヤーはUYesと言っていません"
-           puts "2枚ドロー"
-        end
+      if @players[@turn_player_id].cards.length == 1 && @players[@turn_player_id].call != Rule::CALLS[:last_one]
+        @players[@turn_player_id].draw(2)
+        puts "#{@turn_player_id+1}番プレイヤーはUYesと言っていません"
+        puts "2枚ドロー"
       end
       if @players[@turn_player_id].cards.length == 0
         puts "#{@turn_player_id+1}番目のプレイヤー:勝ち"
