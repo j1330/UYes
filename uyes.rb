@@ -42,6 +42,9 @@ class Uyes
         elsif card.instance_of?(ReverseCard)
           @rotation = (@rotation == :left) ? :right : :left
           @turn_player_id = self.next_player_id(1)
+        elsif card.instance_of?(WildDraw4Card)
+          @turn_player_id = self.next_player_id(1)
+          @players[@turn_player_id].draw(4)
         else
           @turn_player_id = self.next_player_id(1)
         end

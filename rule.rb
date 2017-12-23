@@ -16,7 +16,7 @@ module Rule
   module_function
   def judge_playable_cards(open_card, cards)
     cards.map do | card |
-      if card.instance_of?(WildCard)
+      if card.kind_of?(WildCard)
         true
       elsif open_card.instance_of?(NumberCard) && card.instance_of?(NumberCard)
         card.number == open_card.number || card.color == open_card.color

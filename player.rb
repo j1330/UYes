@@ -42,7 +42,7 @@ class Player
     card_id = choose_card
     if card_id
       card = @cards.delete_at(card_id)
-      if card.instance_of?(WildCard)
+      if card.kind_of?(WildCard)
         card.color = self.choose_color
       end
       return card
@@ -50,7 +50,7 @@ class Player
       self.draw(1)
       if Rule.judge_playable_cards(@field.open_card, [@cards[-1]])[0]
         card =  @cards.delete_at(-1)
-        if card.instance_of?(WildCard)
+        if card.kind_of?(WildCard)
           card.color = self.choose_color
         end
         return card
