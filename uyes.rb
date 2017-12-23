@@ -21,13 +21,22 @@ class Uyes
     @rotation = :right
   end
   def start
+    puts 'デバッグモードでプレイしますか？[y/N] : '
+    is_debug_mode = (['y', 'Y', 'ｙ', 'Y'].include? gets.chomp) ? true : false
+    puts "#{is_debug_mode ? 'デバッグモード' : 'リリースモード'}でプレイします"
+    # ゲーム本体
     loop do
       puts "\n#{@turn_player_id+1}番目"
       if @field.deck.length < 5
         @field.refresh
       end
       puts "オープンカード:#{@field.open_card}"
-      puts @players[@turn_player_id]
+      # リリースモードではAuto Playerの手札は非公開にする
+      if (not is_debug_mode) && @turn_player_id % 4 != 0
+        puts @players[@turn_player_id].cards.map.with_index { |c, i| "[#{i}]" }.join ' '
+      else
+        puts @players[@turn_player_id]
+      end
       card = @players[@turn_player_id].out_card
       if @players[@turn_player_id].cards.length == 1 && @players[@turn_player_id].call != Rule::CALLS[:last_one]
         @players[@turn_player_id].draw(2)
