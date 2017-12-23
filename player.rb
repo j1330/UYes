@@ -56,8 +56,23 @@ class Player
 
   # 手札からカードを捨てる
   def out_cards
+    # 場に出すカードを選択する
     card_ids = choose_cards
-    if (not card_ids.nil?) && (not card_ids.empty?)
+    # カードが出せないときパスの処理を行う
+    if card_ids.nil? || card_ids.empty?
+      self.draw(1)
+      if Rule.judge_playable_cards(@field.open_card, [@cards[-1]])[0]
+        card =  @cards.delete_at(-1)
+        if card.kind_of?(WildCard)
+          card.color = self.choose_color
+        end
+        return [card]
+      else
+        puts "パス(泣)"
+        return nil
+      end
+    # カードが選ばれているとき，手札のカードを消して戻り値として返す
+    else
       # 選ばれたカードを抜きだす
       cards = @cards.values_at *card_ids
       @cards.reject!.with_index { |card, i| card_ids.include? i }
@@ -69,18 +84,6 @@ class Player
         card
       end
       return cards
-    else
-      self.draw(1)
-      if Rule.judge_playable_cards(@field.open_card, [@cards[-1]])[0]
-        card =  @cards.delete_at(-1)
-        if card.kind_of?(WildCard)
-          card.color = self.choose_color
-        end
-        return [card]
-      else
-        puts "パス(泣)"
-        nil
-      end
     end
   end
 
