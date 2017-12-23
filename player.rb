@@ -5,8 +5,10 @@ class Player
 
   # cards:手札
   attr_accessor :cards, :call, :total_score
-  def initialize(field)
+  attr_reader :name
+  def initialize(field, name)
     @field = field
+    @name = name
     @cards = []
     @call = nil
     @total_score = 0

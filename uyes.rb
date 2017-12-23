@@ -12,8 +12,10 @@ class Uyes
   # ゲームの生成
   def initialize
     @field = Field.new
-    @players = [Player.new(@field)]
-    @players += Array.new(3){AutoPlayer.new(@field)}
+    @players = [ Player.new(@field,"あなた") ]
+    @players += Array.new(3) do |index|
+      AutoPlayer.new(@field, "CPU #{index}")
+    end
   end
 
   # 全体ゲームの開始
@@ -42,6 +44,10 @@ class Uyes
       puts "\n#{'='*10} 第#{game_count+1}ゲームの得点 #{'='*10}"
       display_players_score
     end
+
+    # 最終的な勝利者
+    winner = @players.min {|p1,p2| p1.total_score <=> p2.total_score }
+    puts "\n#{winner.name} の総合優勝です!\n"
   end
 
   # 1回ごとのゲームを行う
@@ -56,7 +62,7 @@ class Uyes
     @rotation = :right
 
     loop do
-      puts "\n#{@turn_player_id+1}番目"
+      puts "\n[#{@players[@turn_player_id].name} の順番です...]"
       if @field.deck.length < 5
         @field.refresh
       end
@@ -65,11 +71,11 @@ class Uyes
       card = @players[@turn_player_id].out_card
       if @players[@turn_player_id].cards.length == 1 && @players[@turn_player_id].call != Rule::CALLS[:last_one]
         @players[@turn_player_id].draw(2)
-        puts "#{@turn_player_id+1}番プレイヤーはUYesと言っていません"
+        puts "#{@players[@turn_player_id].name} はUYesと言っていません"
         puts "2枚ドロー"
       end
       if @players[@turn_player_id].cards.length == 0
-        puts "#{@turn_player_id+1}番目のプレイヤー:勝ち"
+        puts "#{@players[@turn_player_id].name} の勝ち"
         break
       end
       if card
@@ -106,8 +112,8 @@ class Uyes
 
   # 各プレイヤーの現在のゲームの得点と総得点を表示する
   def display_players_score
-    @players.each.with_index do |player, index|
-      puts "#{index+1}番目のプレイヤー  このゲームの得点: #{player.score}\t総得点: #{player.total_score}"
+    @players.each do |player|
+      puts "#{player.name}\tこのゲームの得点: #{player.score}\t総得点: #{player.total_score}"
     end
   end
 end
