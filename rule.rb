@@ -10,9 +10,19 @@ module Rule
     yellow: "黄",
     wild: "無"
   }
+
+  # コンソールの色コード
+  COLOR_CODES = {
+    red: 31,
+    blue: 34,
+    green: 32,
+    yellow: 33,
+    wild: 97
+  }
   CALLS = {
     last_one: "UYes"
   }
+
   # 各色0が1枚,1~9が2枚ずつ
   # 数の定義
   NUMBERS = [*0..9] + [*1..9]

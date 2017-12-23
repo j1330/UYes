@@ -6,6 +6,7 @@ class Card
     @costume = costume; @color = color
   end
   def to_s
-    Rule::COLOR_NAMES[@color]
+    # コンソールに色をつけて表示する
+    "\e[#{Rule::COLOR_CODES[@color]}m#{Rule::COLOR_NAMES[@color]}\e[0m"
   end
 end
