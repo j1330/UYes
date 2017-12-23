@@ -5,6 +5,7 @@ require_relative "draw2_card"
 require_relative "skip_card"
 require_relative "reverse_card"
 require_relative "wild_card"
+require_relative "Wild_draw4_card"
 class Field
 
   # open_card:捨て札の一番上
@@ -27,6 +28,7 @@ class Field
                 ]
               end.flatten
     @deck += Array.new(4){WildCard.new("a")}
+    @deck += Array.new(4){WildDraw4Card.new("a")}
     @deck.shuffle!
     @tableau = []
   end
@@ -47,7 +49,7 @@ class Field
   # 捨て札の一番上のカードを更新
   def set_open_card(card)
     if @open_card
-      if @open_card.instance_of?(WildCard)
+      if @open_card.kind_of?(WildCard)
         @open_card.color = nil
       end
       @tableau.push(@open_card)
