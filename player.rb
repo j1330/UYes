@@ -27,10 +27,23 @@ class Player
     end
     if playable_cards.any?
       loop do
-        n = gets.chomp.to_i - 1
-        @call = gets.chomp
-        if n >= 0 && n < playable_cards.length && playable_cards[n]
-          break n
+        # 標準入力からカードと宣言を入力
+        input = gets.split.compact
+        # 入力のうち，Ruleで定義されているものがあれば抽出
+        calls = input.select do |str|
+          Rule::CALLS.values.include? str
+        end
+        # 宣言は"UYes"ひとつしかないので最初の要素をインスタンス変数に入れる
+        @call = calls.empty? ? '' : calls[0]
+        # 入力のうち，手札の枚数以内の数字を抽出
+        card_ids = input.map { |str|
+          str.to_i - 1
+        }.select { |i|
+          i >= 0 && i < playable_cards.length
+        }.uniq
+        # 最初の数字を選択された数字として，選べる手か調べる
+        if (not card_ids.empty?) && playable_cards[card_ids[0]]
+          break card_ids[0]
         end
         puts "選べない手です"
       end
