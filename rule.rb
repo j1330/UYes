@@ -40,6 +40,29 @@ module Rule
       end
     end
   end
+
+  #
+  # 手札に得点をつける
+  #
+  # params cards カードの配列 (手札)
+  # return 得点
+  #
+  def scoring(cards)
+    cards.inject(0) do |score, card|
+      # カードの種類ごとに点数をつける
+      score +=
+      case card
+      when NumberCard
+        card.number
+      when SkipCard, ReverseCard, Draw2Card
+        20
+      when WildCard, WildDraw4Card
+        50
+      else
+        raise "未定義のカード"
+      end
+    end
+  end
 end
 # open = NumberCard.new("a",:red, 7)
 # cards = [
@@ -48,3 +71,4 @@ end
 #   NumberCard.new("a",:green,7)
 # ]
 # puts Rule.judge_playable_cards(open,cards)
+

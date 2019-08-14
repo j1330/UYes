@@ -4,11 +4,14 @@ require_relative "field"
 class Player
 
   # cards:手札
-  attr_accessor :cards, :call
-  def initialize(field)
+  attr_accessor :cards, :call, :total_score
+  attr_reader :name
+  def initialize(field, name)
     @field = field
+    @name = name
     @cards = []
     @call = nil
+    @total_score = 0
   end
 
   # 山札からn枚カードを引く
@@ -86,6 +89,11 @@ class Player
       puts "もう一度入力してください"
     end
   end
+
+  # 手札の得点を返す
+  def score
+    Rule.scoring(cards)
+  end
 end
 # require "pp"
 # field = Field.new
@@ -101,3 +109,45 @@ end
 # puts player.out_card
 # puts player.call
 # puts player
+
+# # scoringのテスト
+# require_relative "rule"
+# require_relative "field"
+# require_relative "number_card"
+# require_relative "draw2_card"
+# require_relative "skip_card"
+# require_relative "reverse_card"
+# require_relative "wild_card"
+# require_relative "Wild_draw4_card"
+
+# field = Field.new
+# players = Array.new(4) { Player.new(field) }
+
+# players[0].cards = [
+#   NumberCard.new("a",:yellow,0),
+#   NumberCard.new("a",:blue,4),
+#   NumberCard.new("a",:red,5),
+#   NumberCard.new("a",:green,7),
+# ]
+# players[1].cards = [
+#   SkipCard.new("a",:yellow),
+#   ReverseCard.new("a",:blue),
+#   Draw2Card.new("a",:red),
+# ]
+# players[2].cards = [
+#   WildCard.new("a"),
+#   WildDraw4Card.new("a"),
+# ]
+# players[3].cards = [
+#   NumberCard.new("a",:yellow,0),
+#   NumberCard.new("a",:blue,4),
+#   NumberCard.new("a",:red,5),
+#   NumberCard.new("a",:green,7),
+#   WildCard.new("a"),
+#   WildDraw4Card.new("a"),
+#   SkipCard.new("a",:yellow),
+#   ReverseCard.new("a",:blue),
+#   Draw2Card.new("a",:red),
+# ]
+
+# puts players.map{ |player| player.score }
