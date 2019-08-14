@@ -19,7 +19,7 @@ class Player
   end
 
   # カードを選ぶ
-  def choose_card
+  def choose_cards
     if @field.open_card.nil?
       playable_cards = @cards.map {true}
     else
@@ -27,10 +27,25 @@ class Player
     end
     if playable_cards.any?
       loop do
-        n = gets.chomp.to_i - 1
-        @call = gets.chomp
-        if n >= 0 && n < playable_cards.length && playable_cards[n]
-          break n
+        # 標準入力からカードと宣言を入力
+        input = gets.split.compact
+        # 入力のうち，Ruleで定義されているものがあれば抽出
+        calls = input.select do |str|
+          Rule::CALLS.values.include? str
+        end
+        # 宣言は"UYes"ひとつしかないので最初の要素をインスタンス変数に入れる
+        @call = calls.empty? ? '' : calls[0]
+        # 入力のうち，手札の枚数以内の数字を抽出
+        card_ids = input.map { |str|
+          str.to_i - 1
+        }.select { |i|
+          i >= 0 && i < playable_cards.length
+        }.uniq
+        # 一番下（最初に選ばれたカード）が出せないカードであるか，同時に出せないカードだったら再入力
+        if  (not card_ids.empty?) &&
+            playable_cards[card_ids[0]] &&
+            Rule.judge_playable_plural_cards_at_one_time(card_ids.map { |i| @cards[i] })
+              break card_ids
         end
         puts "選べない手です"
       end
@@ -40,26 +55,35 @@ class Player
   end
 
   # 手札からカードを捨てる
-  def out_card
-    card_id = choose_card
-    if card_id
-      card = @cards.delete_at(card_id)
-      if card.kind_of?(WildCard)
-        card.color = self.choose_color
-      end
-      return card
-    else
+  def out_cards
+    # 場に出すカードを選択する
+    card_ids = choose_cards
+    # カードが出せないときパスの処理を行う
+    if card_ids.nil? || card_ids.empty?
       self.draw(1)
       if Rule.judge_playable_cards(@field.open_card, [@cards[-1]])[0]
         card =  @cards.delete_at(-1)
         if card.kind_of?(WildCard)
           card.color = self.choose_color
         end
-        return card
+        return [card]
       else
         puts "パス(泣)"
-        nil
+        return nil
       end
+    # カードが選ばれているとき，手札のカードを消して戻り値として返す
+    else
+      # 選ばれたカードを抜きだす
+      cards = @cards.values_at *card_ids
+      @cards.reject!.with_index { |card, i| card_ids.include? i }
+      # ワイルドカードがあれば色を選択する
+      cards.map! do |card|
+        if card.kind_of?(WildCard)
+          card.color = self.choose_color
+        end
+        card
+      end
+      return cards
     end
   end
 

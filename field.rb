@@ -47,13 +47,17 @@ class Field
   end 
 
   # 捨て札の一番上のカードを更新
-  def set_open_card(card)
+  def set_open_cards(cards)
     if @open_card
       if @open_card.kind_of?(WildCard)
         @open_card.color = nil
       end
+      # 捨て札の一番上を捨て札に入れる
       @tableau.push(@open_card)
     end
-    @open_card = card
+    # 捨て札の一番上を，出したカードの一番上（最後）のカードにする
+    @open_card = cards[-1]
+    # 出したカードの一番上以外を捨て札に入れる
+    @tableau.push *cards[1..-2]
   end
 end

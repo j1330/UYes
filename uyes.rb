@@ -28,7 +28,7 @@ class Uyes
       end
       puts "オープンカード:#{@field.open_card}"
       puts @players[@turn_player_id]
-      card = @players[@turn_player_id].out_card
+      cards = @players[@turn_player_id].out_cards
       if @players[@turn_player_id].cards.length == 1 && @players[@turn_player_id].call != Rule::CALLS[:last_one]
         @players[@turn_player_id].draw(2)
         puts "#{@turn_player_id+1}番プレイヤーはUYesと言っていません"
@@ -38,7 +38,15 @@ class Uyes
         puts "#{@turn_player_id+1}番目のプレイヤー:勝ち"
         break
       end
-      if card
+      # カードが出されていないとき次のターンプレイヤーへ
+      if cards.nil? || cards.empty?
+        @turn_player_id = self.next_player_id(1)
+        gets
+        next
+      end
+      # カードが1枚出されたときは特殊カードの可能性があるので，特殊カードの処理を行う
+      if cards.length == 1
+        card = cards[0]
         if card.instance_of?(Draw2Card)
           @turn_player_id = self.next_player_id(1)
           @players[@turn_player_id].draw(2)
@@ -53,11 +61,13 @@ class Uyes
         else
           @turn_player_id = self.next_player_id(1)
         end
-        @field.set_open_card(card)
-        puts "選んだカード:#{card}"
       else
         @turn_player_id = self.next_player_id(1)
       end
+      # 場にカードを出す
+      @field.set_open_cards(cards)
+      # 選んだカードを表示する
+      puts "選んだカード:#{cards.map(&:to_s).join ' '}"
       gets
     end
   end
